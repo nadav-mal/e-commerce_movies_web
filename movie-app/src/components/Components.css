@@ -1,0 +1,84 @@
+.movie-row {
+    margin-bottom: 20px;
+    cursor: default;
+}
+
+.search-row {
+    padding-bottom: 20px;
+}
+
+.movie-button {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    background-color: transparent;
+    border: none;
+    padding: 0;
+    cursor: default;
+}
+
+.movie-button h3 {
+    margin: 0;
+    cursor: default;
+}
+
+.movie-button p {
+    cursor: default;
+    margin: 0;
+    font-size: 12px;
+    color: gray;
+}
+
+.add-to-cart-button {
+    background-color: #4caf50; /* Green color */
+    color: #fff;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 20px; /* Increased border radius */
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.add-to-cart-button:hover {
+    background-color: #45a049; /* Darker shade of green */
+}
+
+.add-to-cart-button:focus {
+    outline: none;
+}
+
+.search-button {
+    background-color: #ff5722; /* Orange color */
+    color: #fff;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 20px; /* Increased border radius */
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-top:5px;
+}
+
+.search-button:hover {
+    background-color: #e64a19; /* Darker shade of orange */
+}
+
+.search-button:focus {
+    outline: none;
+}
+.separator {
+    margin: 20px 0;
+    border: none;
+    border-top: 3px solid #ccc;
+}

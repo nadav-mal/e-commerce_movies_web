@@ -1,5 +1,5 @@
 import React from 'react';
-import Search from './components/Search'
+import SearchComponent from './components/SearchComponent'
 import 'bootstrap/dist/css/bootstrap.min.css';// This is not needed since we imported it to package.json
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 import { Container, Row } from 'react-bootstrap';
@@ -9,8 +9,8 @@ const App = () => {
         <div>
             <Container>
                 <Title/>
-                <Search/>
-            </Container>y
+                <SearchComponent/>
+            </Container>
         </div>
     );
 };

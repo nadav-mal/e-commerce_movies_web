@@ -1,7 +1,7 @@
 // SearchForm.js
 import React from 'react';
 import { Row, Col } from 'react-bootstrap';
-
+import './Components.css'
 const SearchForm = ({
                         searchString,
                         handleSearchStringChange,
@@ -34,7 +34,7 @@ const SearchForm = ({
                 <Row>
                     <Col>
                         <label htmlFor="genres" className="form-label">
-                            Genres:
+                            Genres: (Hold CTRL button to mark multiple genres)
                         </label>
                         <select
                             id="genres"
@@ -81,7 +81,7 @@ const SearchForm = ({
                 </Row>
                 <Row>
                     <Col className={'col-3'}>
-                        <button type="submit" className="btn btn-primary">
+                        <button type="submit" className="search-button">
                             Search
                         </button>
                     </Col>

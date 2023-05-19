@@ -17,8 +17,8 @@ function Title() {
         textAlign: 'center'
     };
     const titleStyle = {
-        marginTop: '110px',
-        fontSize: '5rem', // Add this line to increase the font size
+        marginTop: '40px',
+        fontSize: '3rem', // Add this line to increase the font size
         fontFamily: 'cursive', // Add this line to set a fancy font
         textShadow: '2px 2px 5px black', // Add this line to add a text shadow
     }

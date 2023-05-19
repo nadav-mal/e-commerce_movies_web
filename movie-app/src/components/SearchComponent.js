@@ -3,8 +3,9 @@ import axios from 'axios';
 import { Row, Col, Button } from 'react-bootstrap';
 import SearchForm from './SearchForm';
 import SearchResults from './SearchResults';
-
 const SearchComponent = () => {
+
+
     const [searchString, setSearchString] = useState('');
     const [genres, setGenres] = useState([]);
     const [selectedGenres, setSelectedGenres] = useState([]);
@@ -54,42 +55,50 @@ const SearchComponent = () => {
 
     const handleSearch = (event) => {
         event.preventDefault();
+        setShowSearchHistory(false)
         fetchMovies();
         addToSearchHistory();
-        setSelectedGenres([]);
     };
     const handleSearchAgain = (search) => {
+        setShowSearchHistory(false)
         setSearchString(search.searchString);
-        let reFormatted = cleanGenres(search.selectedGenres);
-        console.log(reFormatted);
         setSelectedGenres(search.selectedGenres);
         setReleaseYear(search.releaseYear);
         setLanguage(search.language);
         fetchMovies();
     };
-    const cleanGenres = (genres) => {
-        return genres.map((genre) => {
-            const cleanedGenre = genre.replace(/\|(\s+)/g, '').trim();
-            return cleanedGenre;
-        });
-    };
-
-
 
     const addToSearchHistory = () => {
-        selectedGenres.forEach(genre =>{
-            genresMap.set(genre.name, genre.id);
-        })
-        const genreNames = selectedGenres.map((genre) => `| ${genre.name} `);
-        console.log(genreNames);
-        const searchEntry = {
-            searchString: searchString,
-            selectedGenres: genreNames,
-            releaseYear: releaseYear,
-            language: language,
-        };
-        setSearchHistory((prevHistory) => [...prevHistory, searchEntry]);
+        const isSearchAlreadyExists = searchHistory.some((entry) => {
+            // Compare the searchString, selectedGenres, releaseYear, and language
+            return (
+                entry.searchString === searchString &&
+                entry.releaseYear === releaseYear &&
+                entry.language === language
+            );
+        });
+
+        if (!isSearchAlreadyExists) {
+            selectedGenres.forEach((genre) => {
+                genresMap.set(genre.name, genre.id);
+            });
+
+            const genreNames = selectedGenres.map((genre) => `${genre.name}`);
+            console.log(genreNames);
+
+            const searchEntry = {
+                searchString: searchString,
+                selectedGenres: genreNames,
+                releaseYear: releaseYear,
+                language: language,
+            };
+            setSearchHistory((prevHistory) => [...prevHistory, searchEntry]);
+            setSelectedGenres([]);
+        }
     };
+
+
+
 
     const fetchMovies = async () => {
 
@@ -152,15 +161,20 @@ const SearchComponent = () => {
                                     <Button onClick={() => deleteSearch(index)}>Delete Search</Button>
                                     <Button onClick={() => handleSearchAgain(search)}>Search Again</Button>
                                 </p>
-                                <b>Selected Genres: {search.selectedGenres}</b>
-                                <p>Release Year: {search.releaseYear}</p>
-                                <p>Language: {search.language}</p>
+                                <b>Selected Genres: {search.selectedGenres.join('|')}</b>
+                                <br/>
+                                <b>Release Year: {search.releaseYear}</b>
+                                <br/>
+                                <b>Language: {search.language}</b>
                                 <hr />
                             </div>
                         ))}
                     </div>
                 )}
-                <SearchResults movies={movies} />
+                {
+                   !showSearchHistory && <SearchResults movies={movies} />
+                }
+
             </Col>
         </Row>
     );

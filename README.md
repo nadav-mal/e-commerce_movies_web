@@ -3,6 +3,11 @@
 # Authors
 
 # Explanations
+Search history: 
+A search will be added to search history only if it contains the same search string, language and release year of an
+already existing search (which is already in the search history).
+
+
 
 ---------------------
 

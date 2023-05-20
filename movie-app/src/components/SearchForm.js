@@ -34,7 +34,7 @@ const SearchForm = ({
                 <Row>
                     <Col>
                         <label htmlFor="genres" className="form-label">
-                            Genres: (Hold CTRL button to mark multiple genres)
+                            Genres, Hold CTRL(windows) or Command(Mac) button to select multiple genres
                         </label>
                         <select
                             id="genres"

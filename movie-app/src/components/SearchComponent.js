@@ -77,7 +77,8 @@ const SearchComponent = () => {
                 entry.language === language
             );
         });
-
+        if( searchString === '' && releaseYear === '' && language === '' && (!selectedGenres.length))
+            return;
         if (!isSearchAlreadyExists) {
             selectedGenres.forEach((genre) => {
                 genresMap.set(genre.name, genre.id);
@@ -96,9 +97,6 @@ const SearchComponent = () => {
             setSelectedGenres([]);
         }
     };
-
-
-
 
     const fetchMovies = async () => {
 
@@ -151,21 +149,25 @@ const SearchComponent = () => {
                         Show Search History
                     </Button>
                 </div>
-                {showSearchHistory && (
+                { showSearchHistory && (
                     <div>
                         <h3>Search History</h3>
+                        <hr/>
                         {searchHistory.map((search, index) => (
                             <div key={index}>
-                                <p>
-                                    Search String: {search.searchString}
-                                    <Button onClick={() => deleteSearch(index)}>Delete Search</Button>
-                                    <Button onClick={() => handleSearchAgain(search)}>Search Again</Button>
-                                </p>
+                                <b>Search String:  {search.searchString}</b>
+                                <br/>
                                 <b>Selected Genres: {search.selectedGenres.join('|')}</b>
                                 <br/>
                                 <b>Release Year: {search.releaseYear}</b>
                                 <br/>
                                 <b>Language: {search.language}</b>
+                                <Row>
+                                    <p>
+                                        <Button onClick={() => deleteSearch(index)}>Delete Search</Button>
+                                        <Button onClick={() => handleSearchAgain(search)}>Search Again</Button>
+                                    </p>
+                                </Row>
                                 <hr />
                             </div>
                         ))}

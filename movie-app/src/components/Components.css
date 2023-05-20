@@ -1,6 +1,7 @@
 .movie-row {
     margin-bottom: 20px;
     cursor: default;
+
 }
 
 .search-row {
@@ -14,7 +15,6 @@
     background-color: transparent;
     border: none;
     padding: 0;
-    cursor: default;
 }
 
 .movie-button h3 {

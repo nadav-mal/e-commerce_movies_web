@@ -1,0 +1,22 @@
+/* Cart.css */
+
+.empty-cart {
+    text-align: center;
+    padding: 20px;
+}
+
+.cart-item {
+    margin-bottom: 20px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.total-price {
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+.text-end {
+    text-align: end;
+}

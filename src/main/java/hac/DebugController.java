@@ -24,11 +24,15 @@ public class DebugController {
 
     @GetMapping("/purchases")
     public List<Purchase> showPurchases() {
+        System.out.println("OUT HERE!!");
         return repository.findAll(); // this is a JPA method to get all the purchases
     }
 
     @PostMapping("/purchases")
     public Purchase addPurchase(Purchase purchase) {
+        System.out.println("In POST");
         return repository.save(purchase); // this is a JPA method to save a purchase to the database
     }
+    //@PostMapping("/addToCart")
+
 }

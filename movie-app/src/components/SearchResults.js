@@ -1,12 +1,32 @@
 import React, { useState } from 'react';
 import { Row, Col, Modal, Button } from 'react-bootstrap';
+import axios from 'axios'
 import './Components.css';
 const SearchResults = ({ movies }) => {
     const [selectedMovie, setSelectedMovie] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const handleAddToCart = (movieId, movieName) => {
         console.log(`Adding ${movieName} (ID: ${movieId}) to the cart...`);
+        const addToCartURL = 'http://localhost:8080/cart/add';
+        // Make the HTTP request to the Spring REST API
+        axios.post(addToCartURL, null, {
+            params: {
+                movieId: movieId,
+                movieName: movieName
+            }
+        })
+            .then(response => {
+                console.log('Added to cart successfully:', response.data);
+                console.log(response);
+                // Handle the response from the API if needed
+            })
+            .catch(error => {
+                console.error('Error adding to cart:', error);
+                // Handle the error if needed
+            });
     };
+
+
     const baseImageUrl = 'https://image.tmdb.org/t/p/';
 
     const handleOpenModal = (movie) => {

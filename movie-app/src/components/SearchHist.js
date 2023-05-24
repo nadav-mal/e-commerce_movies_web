@@ -17,8 +17,6 @@ const SearchHist = (searchHistory, deleteSearch,handleSearchAgain) =>{
                     <b>Selected Genres: {search.selectedGenres.join('|')}</b>
                     <br/>
                     <b>Release Year: {search.releaseYear}</b>
-                    <br/>
-                    <b>Language: {search.language}</b>
                     <Row>
                         <p>
                             <Button onClick={() => deleteSearch(index)}>Delete Search</Button>

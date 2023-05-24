@@ -4,30 +4,33 @@ import { Row, Col, Button } from 'react-bootstrap';
 import SearchForm from './SearchForm';
 import SearchResults from './SearchResults';
 const SearchComponent = () => {
-
-
     const [searchString, setSearchString] = useState('');
     const [genres, setGenres] = useState([]);
     const [selectedGenres, setSelectedGenres] = useState([]);
     const [releaseYear, setReleaseYear] = useState('');
-    const [language, setLanguage] = useState('');
     const [movies, setMovies] = useState([]);
     const [searchHistory, setSearchHistory] = useState([]);
     const [showSearchHistory, setShowSearchHistory] = useState(false);
+    const genresUrl = 'https://api.themoviedb.org/3/genre/movie/list';
     const apiKey = 'b91b712834ebca8f1c0c1e009c6276b6';
+    const urlPrefix = 'https://api.themoviedb.org/3/';
+    const urlSearchPostfix = 'search/movie';
+    const urlDiscoverPostfix = 'discover/movie';
+    const errorMessagePrefix = "Error fetching ";
+    const genresErrorMessagePostfix = 'genres:';
+    const moviesErrorMessagePostfix = 'movies:';
+    const colClassName = 'col-md-12';
     const genresMap= new Map();
+
     useEffect(() => {
-        axios
-            .get('https://api.themoviedb.org/3/genre/movie/list', {
-                params: {
-                    api_key: apiKey, // Replace with your TMDB API key
-                },
-            })
+        axios.get(genresUrl, {
+            params: { api_key: apiKey, },
+        })
             .then((response) => {
                 setGenres(response.data.genres);
             })
             .catch((error) => {
-                console.error('Error fetching genres:', error);
+                console.error(errorMessagePrefix + genresErrorMessagePostfix, error);
             });
     }, []);
 
@@ -49,10 +52,6 @@ const SearchComponent = () => {
         setReleaseYear(event.target.value);
     };
 
-    const handleLanguageChange = (event) => {
-        setLanguage(event.target.value);
-    };
-
     const handleSearch = (event) => {
         event.preventDefault();
         setShowSearchHistory(false)
@@ -64,20 +63,18 @@ const SearchComponent = () => {
         setSearchString(search.searchString);
         setSelectedGenres(search.selectedGenres);
         setReleaseYear(search.releaseYear);
-        setLanguage(search.language);
         fetchMovies();
     };
 
     const addToSearchHistory = () => {
         const isSearchAlreadyExists = searchHistory.some((entry) => {
-            // Compare the searchString, selectedGenres, releaseYear, and language
+            // Compare the searchString, selectedGenres, releaseYear
             return (
                 entry.searchString === searchString &&
-                entry.releaseYear === releaseYear &&
-                entry.language === language
+                entry.releaseYear === releaseYear
             );
         });
-        if( searchString === '' && releaseYear === '' && language === '' && (!selectedGenres.length))
+        if( searchString === '' && releaseYear === '' && (!selectedGenres.length))
             return;
         if (!isSearchAlreadyExists) {
             selectedGenres.forEach((genre) => {
@@ -91,7 +88,6 @@ const SearchComponent = () => {
                 searchString: searchString,
                 selectedGenres: genreNames,
                 releaseYear: releaseYear,
-                language: language,
             };
             setSearchHistory((prevHistory) => [...prevHistory, searchEntry]);
             setSelectedGenres([]);
@@ -99,25 +95,37 @@ const SearchComponent = () => {
     };
 
     const fetchMovies = async () => {
-
         try {
+            const requestInfo =  getPathAndConfigure();
             const response = await axios.get(
-                'https://api.themoviedb.org/3/discover/movie',
-                {
-                    params: {
-                        api_key: apiKey, // Replace with your TMDB API key
-                        with_genres: selectedGenres.map((genre) => genre.id).join(','),
-                        primary_release_year: releaseYear,
-                        language: language,
-                        include_adult: false,
-                    },
-                }
+                requestInfo.url, { params: requestInfo.params, }
             );
             setMovies(response.data.results);
         } catch (error) {
-            console.error('Error fetching movies:', error);
+            console.error(errorMessagePrefix + moviesErrorMessagePostfix, error);
         }
     };
+
+    const getPathAndConfigure = () => {
+        const params = {
+            api_key: apiKey, // Replace with your TMDB API key
+            with_genres: selectedGenres.map((genre) => genre.id).join(','),
+            primary_release_year: releaseYear,
+            include_adult: false,
+        };
+
+        let url = urlPrefix;
+        if(searchString !== '') {
+            params.query = searchString;
+            url += urlSearchPostfix;
+        } else {
+            url += urlDiscoverPostfix;
+        }
+        return {
+            url: url,
+            params: params,
+        }
+    }
 
     const deleteSearch = (index) => {
         setSearchHistory((prevHistory) => {
@@ -129,7 +137,7 @@ const SearchComponent = () => {
 
     return (
         <Row>
-            <Col className={'col-md-12'}>
+            <Col className={colClassName}>
                 <SearchForm
                     searchString={searchString}
                     handleSearchStringChange={handleSearchStringChange}
@@ -138,12 +146,10 @@ const SearchComponent = () => {
                     genres={genres}
                     releaseYear={releaseYear}
                     handleReleaseYearChange={handleReleaseYearChange}
-                    language={language}
-                    handleLanguageChange={handleLanguageChange}
                     handleSearch={handleSearch}
                 />
             </Col>
-            <Col className={'col-md-12'}>
+            <Col className={colClassName}>
                 <div>
                     <Button onClick={() => setShowSearchHistory(!showSearchHistory)}>
                         Show Search History
@@ -160,8 +166,6 @@ const SearchComponent = () => {
                                 <b>Selected Genres: {search.selectedGenres.join('|')}</b>
                                 <br/>
                                 <b>Release Year: {search.releaseYear}</b>
-                                <br/>
-                                <b>Language: {search.language}</b>
                                 <Row>
                                     <p>
                                         <Button onClick={() => deleteSearch(index)}>Delete Search</Button>

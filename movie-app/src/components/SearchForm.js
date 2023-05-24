@@ -10,8 +10,6 @@ const SearchForm = ({
                         genres,
                         releaseYear,
                         handleReleaseYearChange,
-                        language,
-                        handleLanguageChange,
                         handleSearch,
                     }) => {
     return (
@@ -29,7 +27,6 @@ const SearchForm = ({
                             className="form-control"
                         />
                     </Col>
-
                 </Row>
                 <Row>
                     <Col>
@@ -61,20 +58,6 @@ const SearchForm = ({
                             id="releaseYear"
                             value={releaseYear}
                             onChange={handleReleaseYearChange}
-                            className="form-control"
-                        />
-                    </Col>
-                </Row>
-                <Row>
-                    <Col>
-                        <label htmlFor="language" className="form-label">
-                            Language:
-                        </label>
-                        <input
-                            type="text"
-                            id="language"
-                            value={language}
-                            onChange={handleLanguageChange}
                             className="form-control"
                         />
                     </Col>

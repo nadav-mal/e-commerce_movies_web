@@ -17,10 +17,6 @@ public class ShoppingCart implements Serializable {
     public ShoppingCart() {
         this.cart = new ArrayList<>();
     }
-    public void addToCart(String movieName, int movieId,String posterPath, String overview,String releaseDate ) {
-        MovieItem item = new MovieItem(movieName, movieId,posterPath,overview,releaseDate);
-        cart.add(item);
-    }
 
     public ArrayList<MovieItem>  getCart() {
         return cart;
@@ -30,8 +26,16 @@ public class ShoppingCart implements Serializable {
         this.cart = cart;
     }
 
-    public void add (MovieItem m) {
-        cart.add(m);
+    public void add(MovieItem movieItem) {
+        boolean movieExists = cart.stream()
+                .anyMatch(item -> item.getMovieId() == movieItem.getMovieId());
+
+        if (!movieExists) {
+            cart.add(movieItem);
+        }
+    }
+    public void removeItem(int movieId) {
+        cart.removeIf(item -> item.getMovieId() == movieId);
     }
     public int getSize() {
         return cart.size();

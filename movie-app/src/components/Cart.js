@@ -7,15 +7,15 @@ import axios from 'axios';
 const Cart = () => {
     const [cartData, setCartData] = useState(null);
     const [cartSize, setCartSize] = useState(0);
-    const [movieData, setMovieData] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [selectedImage, setSelectedImage] = useState('');
     const apiKey = 'b91b712834ebca8f1c0c1e009c6276b6';
     const baseImageUrl = 'https://image.tmdb.org/t/p/';
+    const serverCartAPI = 'http://localhost:8080/cart'
 
     const fetchCart = () => {
         try {
-            axios.get('http://localhost:8080/cart').then((response) => {
+            axios.get(serverCartAPI).then((response) => {
                 setCartData(response.data.cart);
                 setCartSize(response.data.size);
                 console.log(response.data);
@@ -41,7 +41,17 @@ const Cart = () => {
         setSelectedImage(image);
         setShowModal(true);
     };
+    const handleRemoveFromCart = (movieId) =>{
+        console.log(movieId);
+        try{
+            axios.post(`${serverCartAPI}/remove/${movieId}`, null, {
+            }).then(response=>{
+                fetchCart()
+            })
+        } catch(e){
 
+        }
+    }
     const closeModal = () => {
         setShowModal(false);
     };
@@ -77,14 +87,14 @@ const Cart = () => {
                 {cartData.map((movie, index) => (
                     <div key={index} className="cart-item">
                         <Row>
-                            <Col className={'col-md-4 col-xs-6'}>
+                            <Col className={'col-md-3 col-xs-6'}>
                                 <Image
                                     src={`${baseImageUrl}w200${movie.posterPath}`}
                                     onClick={() => handleImageClick(`${baseImageUrl}original${movie.posterPath}`)}
                                     className="clickable-image"
                                 />
                             </Col>
-                            <Col className={'col-md-8 col-xs-6'}>
+                            <Col className={'col-md-7 col-xs-6'}>
                                 <h3>{movie.movieName}</h3>
                                 <p>
                                     <strong>Release Date:</strong> {movie.releaseDate}
@@ -95,6 +105,11 @@ const Cart = () => {
                                 <hr />
                                 <b>Overview:</b>
                                 <p>{movie.overview}</p>
+                            </Col>
+                            <Col className={'col-md-2 col-xs-3'}>
+                                <button className={'btn btn-danger'} onClick={()=> handleRemoveFromCart(movie.movieId)}>
+                                    Remove from cart
+                                </button>
                             </Col>
                         </Row>
                     </div>

@@ -25,13 +25,16 @@ public class ShoppingCartController {
 
     @PostMapping("/add")
     public void addItem(@RequestParam String movieName, @RequestParam int movieId,@RequestParam String posterPath,@RequestParam String releaseDate,@RequestParam String overview) {
-        shoppingCart.addToCart(movieName, movieId,posterPath,overview,releaseDate);
+        MovieItem item = new MovieItem(movieName, movieId,posterPath,overview,releaseDate);
+        shoppingCart.add(item);
         System.out.println("SIZE: " + shoppingCart.getSize());
+
     }
 
-    @PostMapping("/remove/{index}")
-    public void removeItem(@PathVariable int index) {
-        //shoppingCart.removeItem(index);
+    @PostMapping("/remove/{movieId}")
+    public void removeItem(@PathVariable int movieId) {
+        shoppingCart.removeItem(movieId);
+
     }
 
     @PostMapping("/clear")

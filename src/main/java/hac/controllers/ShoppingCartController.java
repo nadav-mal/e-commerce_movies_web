@@ -24,11 +24,8 @@ public class ShoppingCartController {
     }
 
     @PostMapping("/add")
-    public void addItem(@RequestParam String movieName, @RequestParam int movieId) {
-        System.out.println("In /cart/add");
-        System.out.println("movie name:" + movieName);
-        System.out.println(",movieID:" + movieId);
-        shoppingCart.addToCart(movieName, movieId);
+    public void addItem(@RequestParam String movieName, @RequestParam int movieId,@RequestParam String posterPath,@RequestParam String releaseDate,@RequestParam String overview) {
+        shoppingCart.addToCart(movieName, movieId,posterPath,overview,releaseDate);
         System.out.println("SIZE: " + shoppingCart.getSize());
     }
 

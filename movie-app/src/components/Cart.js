@@ -1,63 +1,49 @@
 import React, { useState, useEffect } from 'react';
-import { Row, Col, Image, Button } from 'react-bootstrap';
+import { Row, Col, Image, Button, Modal } from 'react-bootstrap';
 import './Cart.css';
 import Title from './Title';
 import axios from 'axios';
 
 const Cart = () => {
     const [cartData, setCartData] = useState(null);
-
     const [cartSize, setCartSize] = useState(0);
     const [movieData, setMovieData] = useState([]);
+    const [showModal, setShowModal] = useState(false);
+    const [selectedImage, setSelectedImage] = useState('');
     const apiKey = 'b91b712834ebca8f1c0c1e009c6276b6';
     const baseImageUrl = 'https://image.tmdb.org/t/p/';
 
-    useEffect(() => {
-        fetchCart();
-    }, []);
-
-    useEffect(() => {
-        if(cartData){
-            cartData.forEach(movie =>{ fetchMovieData(movie.movieId)});
-        }
-    }, [cartData]);
-
     const fetchCart = () => {
         try {
-            axios.get('http://localhost:8080/cart')
-                .then(response=>{
-                    setCartData(response.data.cart);
-                    setCartSize(response.data.size);
-                })
+            axios.get('http://localhost:8080/cart').then((response) => {
+                setCartData(response.data.cart);
+                setCartSize(response.data.size);
+                console.log(response.data);
+            });
         } catch (error) {
             console.error('Error fetching cart:', error);
         }
     };
 
-    const fetchMovieData = async (movieId) => {
-        try {
-            const response = await axios.get(
-                `https://api.themoviedb.org/3/movie/${movieId}?api_key=${apiKey}`
-            );
-            console.log(response.data);
-            addMovieData(response.data);
-        } catch (error) {
-            console.error('Error fetching movie data:', error);
-            return null;
-        }
-    };
-    const addMovieData = (newMovie) => {
-        const existingMovie = movieData.find((movie) => movie.movieId === newMovie.movieId);
-        if(!existingMovie)
-            setMovieData((prevMovieData) => [...prevMovieData, newMovie]);
-    };
+    useEffect(() => {
+        fetchCart();
+    }, []); // Fetch cart data when the Cart component is rendered
 
     const getTotalPrice = () => {
-        if (cartData && cartData.cart) {
-            const totalPrice = cartData.cart.reduce((total, movie) => total + 3.99, 0);
+        if (cartData) {
+            const totalPrice = cartData.reduce((total, movie) => total + 3.99, 0);
             return totalPrice.toFixed(2);
         }
         return '0.00';
+    };
+
+    const handleImageClick = (image) => {
+        setSelectedImage(image);
+        setShowModal(true);
+    };
+
+    const closeModal = () => {
+        setShowModal(false);
     };
 
     if (!cartData) {
@@ -72,7 +58,7 @@ const Cart = () => {
         );
     }
 
-    if (cartSize===0) {
+    if (cartSize === 0) {
         // Handle the case where the cart is empty
         return (
             <div>
@@ -88,16 +74,27 @@ const Cart = () => {
         <div>
             <Title title="Cart" />
             <div>
-                {movieData.map((movie, index) => (
+                {cartData.map((movie, index) => (
                     <div key={index} className="cart-item">
                         <Row>
-                            <Col xs={3}>
-                                <Image src={`${baseImageUrl}w200${movie.poster_path}`} />
+                            <Col className={'col-md-4 col-xs-6'}>
+                                <Image
+                                    src={`${baseImageUrl}w200${movie.posterPath}`}
+                                    onClick={() => handleImageClick(`${baseImageUrl}original${movie.posterPath}`)}
+                                    className="clickable-image"
+                                />
                             </Col>
-                            <Col xs={6}>
+                            <Col className={'col-md-8 col-xs-6'}>
                                 <h3>{movie.movieName}</h3>
-                                <p>Release Date: {movie.releaseDate}</p>
-                                <p>Price: $3.99</p>
+                                <p>
+                                    <strong>Release Date:</strong> {movie.releaseDate}
+                                </p>
+                                <p>
+                                    <strong>Price: </strong> $3.99
+                                </p>
+                                <hr />
+                                <b>Overview:</b>
+                                <p>{movie.overview}</p>
                             </Col>
                         </Row>
                     </div>
@@ -108,6 +105,20 @@ const Cart = () => {
                     </Col>
                 </Row>
             </div>
+
+            <Modal show={showModal} onHide={closeModal}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Large Image</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Image src={selectedImage} fluid />
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={closeModal}>
+                        Close
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         </div>
     );
 };

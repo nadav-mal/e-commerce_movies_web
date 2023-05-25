@@ -17,8 +17,8 @@ public class ShoppingCart implements Serializable {
     public ShoppingCart() {
         this.cart = new ArrayList<>();
     }
-    public void addToCart(String movieName, int movieId) {
-        MovieItem item = new MovieItem(movieName, movieId);
+    public void addToCart(String movieName, int movieId,String posterPath, String overview,String releaseDate ) {
+        MovieItem item = new MovieItem(movieName, movieId,posterPath,overview,releaseDate);
         cart.add(item);
     }
 

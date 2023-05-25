@@ -1,22 +1,50 @@
 /* Cart.css */
 
+/* Styles for the empty cart message */
 .empty-cart {
+    margin-top: 20px;
     text-align: center;
-    padding: 20px;
 }
-
+.clickable-image {
+    cursor: pointer;
+}
+/* Styles for the cart items */
 .cart-item {
     margin-bottom: 20px;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    padding: 10px;
+    background-color: #f5f5f5;
+}
+
+.cart-item h3 {
+    margin-top: 0;
+}
+
+.cart-item img {
+    width: 100%;
+    max-width: 200px;
+    height: auto;
+}
+
+.cart-item p {
+    font-family: "Comic Sans MS"; /*My fav font */
+    margin: 5px 0;
+}
+
+.cart-item hr {
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 .total-price {
     font-weight: bold;
-    margin-top: 20px;
+    font-size: 18px;
 }
 
-.text-end {
-    text-align: end;
+/* Responsive styles for different screen sizes */
+@media (max-width: 767px) {
+    .cart-item .col-md-4,
+    .cart-item .col-md-8 {
+        flex-basis: 100%;
+        max-width: 100%;
+    }
 }

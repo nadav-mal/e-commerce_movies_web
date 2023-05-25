@@ -5,14 +5,17 @@ import './Components.css';
 const SearchResults = ({ movies }) => {
     const [selectedMovie, setSelectedMovie] = useState(null);
     const [showModal, setShowModal] = useState(false);
-    const handleAddToCart = (movieId, movieName) => {
+    const handleAddToCart = (movieId, movieName, posterPath,releaseDate,overview) => {
         console.log(`Adding ${movieName} (ID: ${movieId}) to the cart...`);
         const addToCartURL = 'http://localhost:8080/cart/add';
         // Make the HTTP request to the Spring REST API
         axios.post(addToCartURL, null, {
             params: {
                 movieId: movieId,
-                movieName: movieName
+                movieName: movieName,
+                posterPath: posterPath,
+                releaseDate: releaseDate,
+                overview:overview
             }
         })
             .then(response => {
@@ -55,7 +58,7 @@ const SearchResults = ({ movies }) => {
                                         <p>Original language: {movie.original_language}</p>
                                 </Col>
                                 <Col className={'col-md-2'}>
-                                    <button className="add-to-cart-button" onClick={() => handleAddToCart(movie.id, movie.title)}>
+                                    <button className="add-to-cart-button" onClick={() => handleAddToCart(movie.id, movie.title,movie.poster_path,movie.release_date,movie.overview)}>
                                         Add to Cart
                                     </button>
                                 </Col>
@@ -75,11 +78,15 @@ const SearchResults = ({ movies }) => {
                 <Modal show={showModal} onHide={handleCloseModal} centered>
                     <Modal.Body>
                         {selectedMovie && (
-                            <img
-                                src={`${baseImageUrl}w500${selectedMovie.poster_path}`}
-                                alt={selectedMovie.title}
-                                className="modal-image"
-                            />
+                            <div>
+                                <h5>{selectedMovie.title}</h5>
+                                <img
+                                    src={`${baseImageUrl}w400${selectedMovie.poster_path}`}
+                                    alt={selectedMovie.title}
+                                    className="modal-image"
+                                />
+                            </div>
+
                         )}
                     </Modal.Body>
                     <Modal.Footer>

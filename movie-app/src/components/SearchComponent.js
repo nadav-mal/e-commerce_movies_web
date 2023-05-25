@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import Title from './Title'
+
 import axios from 'axios';
 import { Row, Col, Button } from 'react-bootstrap';
 import SearchForm from './SearchForm';
@@ -137,6 +139,7 @@ const SearchComponent = () => {
 
     return (
         <Row>
+            <Title/>
             <Col className={colClassName}>
                 <SearchForm
                     searchString={searchString}

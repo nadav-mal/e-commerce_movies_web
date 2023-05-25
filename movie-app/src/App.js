@@ -9,6 +9,8 @@ import SearchComponent from './components/SearchComponent';
 import Cart from './components/Cart';
 
 const App = () => {
+
+
     return (
         <Router>
             <div>
@@ -17,7 +19,7 @@ const App = () => {
                     <Routes>
                         <Route path="/" element={<Title />} />
                         <Route path="/search" element={<SearchComponent />} />
-                        <Route path="/cart" element={<Cart />} />
+                        <Route path="/cart" element={<Cart/>} />
                     </Routes>
                 </Container>
             </div>

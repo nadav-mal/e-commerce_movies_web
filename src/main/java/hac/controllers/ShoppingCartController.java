@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/cart")
 @CrossOrigin(origins = "http://localhost:3000")
 public class ShoppingCartController {
-    private ShoppingCart shoppingCart;
+    private final ShoppingCart shoppingCart;
 
     @Autowired
     public ShoppingCartController(ShoppingCart shoppingCart) {
@@ -24,11 +24,11 @@ public class ShoppingCartController {
     }
 
     @PostMapping("/add")
-    public void addItem(@RequestParam String movieName, @RequestParam int movieId,@RequestParam String posterPath,@RequestParam String releaseDate,@RequestParam String overview) {
+    public int addItem(@RequestParam String movieName, @RequestParam int movieId,@RequestParam String posterPath,@RequestParam String releaseDate,@RequestParam String overview) {
         MovieItem item = new MovieItem(movieName, movieId,posterPath,overview,releaseDate);
         shoppingCart.add(item);
         System.out.println("SIZE: " + shoppingCart.getSize());
-
+        return shoppingCart.getSize();
     }
 
     @PostMapping("/remove/{movieId}")
@@ -37,8 +37,12 @@ public class ShoppingCartController {
 
     }
 
+    @GetMapping("/size")
+    public int getSize(){
+        return shoppingCart.getSize();
+    }
     @PostMapping("/clear")
     public void clearCart() {
-        //shoppingCart.clearCart();
+        shoppingCart.clearCart();
     }
 }

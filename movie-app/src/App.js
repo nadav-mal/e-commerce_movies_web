@@ -4,10 +4,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 import { Container } from 'react-bootstrap';
 import Navbar from './components/Navbar';
-import Title from './components/Title';
 import SearchComponent from './components/SearchComponent';
 import Cart from './components/Cart';
-
+import HomePage from "./components/HomePage";
 const App = () => {
 
 
@@ -17,7 +16,7 @@ const App = () => {
                 <Navbar />
                 <Container>
                     <Routes>
-                        <Route path="/" element={<Title />} />
+                        <Route path="/" element={<HomePage/>} />
                         <Route path="/search" element={<SearchComponent />} />
                         <Route path="/cart" element={<Cart/>} />
                     </Routes>

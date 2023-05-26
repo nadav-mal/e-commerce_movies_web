@@ -11,9 +11,18 @@ const Cart = () => {
     const [showModal, setShowModal] = useState(false);
     const [selectedImage, setSelectedImage] = useState('');
     const [showPurchases, setShowPurchases] = useState(false);
-    const apiKey = 'b91b712834ebca8f1c0c1e009c6276b6';
     const baseImageUrl = 'https://image.tmdb.org/t/p/';
     const serverCartAPI = 'http://localhost:8080/cart'
+
+    const emptyCart = () => {
+        const emptyCartURL = serverCartAPI + '/clear'
+        axios.post(emptyCartURL)
+            .then(()=>{
+            setCartData(null);
+            setCartSize(0);
+            }).catch(()=>{
+        })
+    }
     const fetchCart = () => {
         try {
             axios.get(serverCartAPI).then((response) => {
@@ -32,7 +41,7 @@ const Cart = () => {
 
     const getTotalPrice = () => {
         if (cartData) {
-            const totalPrice = cartData.reduce((total, movie) => total + 3.99, 0);
+            const totalPrice = cartData.reduce((total) => total + 3.99, 0);
             return totalPrice.toFixed(2);
         }
         return '0.00';
@@ -46,7 +55,7 @@ const Cart = () => {
         console.log(movieId);
         try{
             axios.post(`${serverCartAPI}/remove/${movieId}`, null, {
-            }).then(response=>{
+            }).then(()=>{
                 fetchCart()
             })
         } catch(e){
@@ -62,9 +71,11 @@ const Cart = () => {
         // Handle the case where the cart data is not available yet
         return (
             <div>
-                <Title title="Cart" />
+                <Title/>
                 <div className="empty-cart">
-                    <p>Loading cart...</p>
+                    <p>Your cart is empty</p>
+                    <Button className={'btn btn-primary'} href={'/search'}>Shop some movies</Button>
+
                 </div>
             </div>
         );
@@ -76,7 +87,8 @@ const Cart = () => {
             <div>
                 <Title title="Cart" />
                 <div className="empty-cart">
-                    <p>Your cart is empty. Go shop for movies! :)</p>
+                    <p>Your cart is empty.</p>
+                    <Button className={'btn btn-primary'} href={'/search'}>Buy some movies here!</Button>
                 </div>
             </div>
         );
@@ -88,6 +100,7 @@ const Cart = () => {
             <div>
                 <CheckOutComponent totalPrice={getTotalPrice()}
                                    setShowPurchases={setShowPurchases}/>
+                <Button className={'btn btn-danger'} onClick={emptyCart}>Clear cart</Button>
                 {cartData.map((movie, index) => (
                     <div key={index} className="cart-item">
                         <Row>
@@ -118,8 +131,7 @@ const Cart = () => {
                         </Row>
                     </div>
                 ))}
-                <CheckOutComponent totalPrice={getTotalPrice()}
-                                   setShowPurchases={setShowPurchases}/>
+
             </div>
 
             <Modal show={showModal} onHide={closeModal}>

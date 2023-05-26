@@ -37,6 +37,9 @@ public class ShoppingCart implements Serializable {
     public void removeItem(int movieId) {
         cart.removeIf(item -> item.getMovieId() == movieId);
     }
+    public void clearCart(){
+        cart.clear();
+    }
     public int getSize() {
         return cart.size();
     }

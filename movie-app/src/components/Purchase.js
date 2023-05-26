@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Row, Col } from 'react-bootstrap';
+import { Row, Col, Button } from 'react-bootstrap';
 import Title from './Title'
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
@@ -26,10 +26,10 @@ const Purchase = ({ totalPrice }) => {
             payment: totalPrice
         };
 
-        axios.post('http://localhost:8080/purchase/purchases', null, {
+        axios.post(addPurchaseUrl, null, {
             params: purchase
         })
-            .then(response => {
+            .then(() => {
                 displayMessageToUser(successMessage, true);
             })
             .catch(error => {
@@ -114,9 +114,9 @@ const Purchase = ({ totalPrice }) => {
             </Row>
 
             {displayMessage && (
-                <Row>
+                <Button className={'btn btn-success'}>
                     <div className="message">{displayMessage}</div>
-                </Row>
+                </Button>
             )}
         </div>
     );

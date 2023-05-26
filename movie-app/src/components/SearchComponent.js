@@ -13,6 +13,8 @@ const SearchComponent = () => {
     const [movies, setMovies] = useState([]);
     const [searchHistory, setSearchHistory] = useState([]);
     const [showSearchHistory, setShowSearchHistory] = useState(false);
+    const [cartSize, setCartSize] = useState(0);
+
     const genresUrl = 'https://api.themoviedb.org/3/genre/movie/list';
     const apiKey = 'b91b712834ebca8f1c0c1e009c6276b6';
     const urlPrefix = 'https://api.themoviedb.org/3/';
@@ -21,10 +23,14 @@ const SearchComponent = () => {
     const errorMessagePrefix = "Error fetching ";
     const genresErrorMessagePostfix = 'genres:';
     const moviesErrorMessagePostfix = 'movies:';
-    const colClassName = 'col-md-12';
+
     const genresMap= new Map();
 
     useEffect(() => {
+        getGenres();
+        getCartSize();
+    }, []);
+    const getGenres = () =>{
         axios.get(genresUrl, {
             params: { api_key: apiKey, },
         })
@@ -34,12 +40,10 @@ const SearchComponent = () => {
             .catch((error) => {
                 console.error(errorMessagePrefix + genresErrorMessagePostfix, error);
             });
-    }, []);
-
+    }
     const handleSearchStringChange = (event) => {
         setSearchString(event.target.value);
     };
-
     const handleGenreChange = (event) => {
         const selectedGenreIds = Array.from(event.target.selectedOptions, (option) =>
             parseInt(option.value)
@@ -52,6 +56,14 @@ const SearchComponent = () => {
 
     const handleReleaseYearChange = (event) => {
         setReleaseYear(event.target.value);
+    };
+    const getCartSize = () =>{
+        const getCartSizeURL = 'http://localhost:8080/cart/size';
+        axios.get(getCartSizeURL)
+            .then(response =>{
+                setCartSize(response.data);
+            }).catch(()=>{
+        })
     };
 
     const handleSearch = (event) => {
@@ -110,7 +122,7 @@ const SearchComponent = () => {
 
     const getPathAndConfigure = () => {
         const params = {
-            api_key: apiKey, // Replace with your TMDB API key
+            api_key: apiKey,
             with_genres: selectedGenres.map((genre) => genre.id).join(','),
             primary_release_year: releaseYear,
             include_adult: false,
@@ -129,6 +141,9 @@ const SearchComponent = () => {
         }
     }
 
+    const clearHistory = () =>{
+        setSearchHistory([]);
+    }
     const deleteSearch = (index) => {
         setSearchHistory((prevHistory) => {
             const updatedHistory = [...prevHistory];
@@ -138,9 +153,15 @@ const SearchComponent = () => {
     };
 
     return (
-        <Row>
+        <>
             <Title/>
-            <Col className={colClassName}>
+            <Row>
+                <Col className="col-md-12" style={{ backgroundColor: '#f8f9fa', padding: '10px' }}>
+                    <Button href={'/cart'}> {cartSize} Items. Click here to go to cart.</Button>
+                </Col>
+            </Row>
+        <Row>
+            <Col className={'col-md-12'}>
                 <SearchForm
                     searchString={searchString}
                     handleSearchStringChange={handleSearchStringChange}
@@ -152,7 +173,7 @@ const SearchComponent = () => {
                     handleSearch={handleSearch}
                 />
             </Col>
-            <Col className={colClassName}>
+            <Col className={'col-md-12'}>
                 <div>
                     <Button onClick={() => setShowSearchHistory(!showSearchHistory)}>
                         Show Search History
@@ -162,6 +183,7 @@ const SearchComponent = () => {
                     <div>
                         <h3>Search History</h3>
                         <hr/>
+                        <Button className={'btn btn-danger'} onClick={clearHistory}>Clear Search History</Button>
                         {searchHistory.map((search, index) => (
                             <div key={index}>
                                 <b>Search String:  {search.searchString}</b>
@@ -181,11 +203,11 @@ const SearchComponent = () => {
                     </div>
                 )}
                 {
-                   !showSearchHistory && <SearchResults movies={movies} />
+                   !showSearchHistory && <SearchResults movies={movies} setCartSize={setCartSize}/>
                 }
-
             </Col>
         </Row>
+        </>
     );
 };
 

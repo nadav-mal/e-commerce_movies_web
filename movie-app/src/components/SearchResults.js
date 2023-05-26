@@ -2,12 +2,16 @@ import React, { useState } from 'react';
 import { Row, Col, Modal, Button } from 'react-bootstrap';
 import axios from 'axios'
 import './Components.css';
-const SearchResults = ({ movies }) => {
+const SearchResults = ({ movies,setCartSize }) => {
     const [selectedMovie, setSelectedMovie] = useState(null);
     const [showModal, setShowModal] = useState(false);
+    const addToCart = '/add'
+
+    const baseImageUrl = 'https://image.tmdb.org/t/p/';
+    const serverUrl = 'http://localhost:8080/cart'
+
     const handleAddToCart = (movieId, movieName, posterPath,releaseDate,overview) => {
-        console.log(`Adding ${movieName} (ID: ${movieId}) to the cart...`);
-        const addToCartURL = 'http://localhost:8080/cart/add';
+        const addToCartURL = serverUrl+ addToCart;
         // Make the HTTP request to the Spring REST API
         axios.post(addToCartURL, null, {
             params: {
@@ -19,18 +23,13 @@ const SearchResults = ({ movies }) => {
             }
         })
             .then(response => {
-                console.log('Added to cart successfully:', response.data);
-                console.log(response);
-                // Handle the response from the API if needed
+                setCartSize(response.data);
             })
-            .catch(error => {
-                console.error('Error adding to cart:', error);
-                // Handle the error if needed
+            .catch(()=>{
+                alert("Error when adding to cart")
             });
     };
 
-
-    const baseImageUrl = 'https://image.tmdb.org/t/p/';
 
     const handleOpenModal = (movie) => {
         setSelectedMovie(movie);
@@ -43,6 +42,7 @@ const SearchResults = ({ movies }) => {
     };
 
     return (
+        <>
         <Row>
             <Col>
                 <Row className={'search-row'}>
@@ -61,6 +61,7 @@ const SearchResults = ({ movies }) => {
                                     <button className="add-to-cart-button" onClick={() => handleAddToCart(movie.id, movie.title,movie.poster_path,movie.release_date,movie.overview)}>
                                         Add to Cart
                                     </button>
+
                                 </Col>
                                 <Col className={'col-md-2'}>
                                     <button className="add-to-cart-button" onClick={()=> handleOpenModal(movie)}>
@@ -70,9 +71,11 @@ const SearchResults = ({ movies }) => {
                                 <Col className={'col-12'}>
                                     <p>{movie.overview}</p>
                                 </Col>
+
                                 {index !== movies.length - 1 && <hr className="separator" />}
                             </Row>
                         ))}
+
                     </Col>
                 </Row>
                 <Modal show={showModal} onHide={handleCloseModal} centered>
@@ -97,6 +100,8 @@ const SearchResults = ({ movies }) => {
                 </Modal>
             </Col>
         </Row>
+        </>
+
     );
 };
 

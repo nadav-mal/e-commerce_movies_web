@@ -2,16 +2,14 @@ import React, { useState } from 'react';
 import { Row, Col, Modal, Button } from 'react-bootstrap';
 import axios from 'axios'
 import './Components.css';
+import {baseImageUrl, serverCartAPI, addToCart, addErrMsg} from "../consts/consts";
 const SearchResults = ({ movies,setCartSize }) => {
     const [selectedMovie, setSelectedMovie] = useState(null);
     const [showModal, setShowModal] = useState(false);
-    const addToCart = '/add'
 
-    const baseImageUrl = 'https://image.tmdb.org/t/p/';
-    const serverUrl = 'http://localhost:8080/cart'
 
     const handleAddToCart = (movieId, movieName, posterPath,releaseDate,overview) => {
-        const addToCartURL = serverUrl+ addToCart;
+        const addToCartURL = serverCartAPI+ addToCart;
         // Make the HTTP request to the Spring REST API
         axios.post(addToCartURL, null, {
             params: {
@@ -26,7 +24,7 @@ const SearchResults = ({ movies,setCartSize }) => {
                 setCartSize(response.data);
             })
             .catch(()=>{
-                alert("Error when adding to cart")
+                alert(addErrMsg)
             });
     };
 

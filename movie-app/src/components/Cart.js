@@ -5,17 +5,16 @@ import Title from './Title';
 import axios from 'axios';
 import Purchase from './Purchase'
 import CheckOutComponent from './CheckOutComponent'
+import * as consts from '../consts/consts'
 const Cart = () => {
     const [cartData, setCartData] = useState(null);
     const [cartSize, setCartSize] = useState(0);
     const [showModal, setShowModal] = useState(false);
     const [selectedImage, setSelectedImage] = useState('');
     const [showPurchases, setShowPurchases] = useState(false);
-    const baseImageUrl = 'https://image.tmdb.org/t/p/';
-    const serverCartAPI = 'http://localhost:8080/cart'
 
     const emptyCart = () => {
-        const emptyCartURL = serverCartAPI + '/clear'
+        const emptyCartURL = consts.serverCartAPI + '/clear'
         axios.post(emptyCartURL)
             .then(()=>{
             setCartData(null);
@@ -25,7 +24,7 @@ const Cart = () => {
     }
     const fetchCart = () => {
         try {
-            axios.get(serverCartAPI).then((response) => {
+            axios.get(consts.serverCartAPI).then((response) => {
                 setCartData(response.data.cart);
                 setCartSize(response.data.size);
                 console.log(response.data);
@@ -54,7 +53,7 @@ const Cart = () => {
     const handleRemoveFromCart = (movieId) =>{
         console.log(movieId);
         try{
-            axios.post(`${serverCartAPI}/remove/${movieId}`, null, {
+            axios.post(`${consts.serverCartAPI}/remove/${movieId}`, null, {
             }).then(()=>{
                 fetchCart()
             })
@@ -106,8 +105,8 @@ const Cart = () => {
                         <Row>
                             <Col className={'col-sm-12 col-md-3 d-none d-sm-block'}>
                                 <Image
-                                    src={`${baseImageUrl}w200${movie.posterPath}`}
-                                    onClick={() => handleImageClick(`${baseImageUrl}original${movie.posterPath}`)}
+                                    src={`${consts.baseImageUrl}w200${movie.posterPath}`}
+                                    onClick={() => handleImageClick(`${consts.baseImageUrl}original${movie.posterPath}`)}
                                     className="clickable-image"
                                 />
                             </Col>

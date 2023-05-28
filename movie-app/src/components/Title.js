@@ -6,10 +6,11 @@ import { Row, Col } from 'react-bootstrap';
  @returns {JSX.Element} - React component that displays the title of the Bulls and Cows game on a background image.
  */
 function Title() {
+    const TITLE = "The Binger"
     const divStyle = {
         backgroundImage: 'url(titleImg.jpg)',
         backgroundRepeat: 'no-repeat',
-        backgroundSize: '90% 90%',
+        backgroundSize: '100% 100%',
         backgroundPosition: 'center',
         height: '30vh',
         color: 'beige',
@@ -32,8 +33,8 @@ function Title() {
         <div style={divStyle}>
             <Row>
                 <Col>
-                    <h1 className="d-none d-md-block" style={titleStyle}>The Binger</h1>
-                    <h1 className="d-block d-md-none" style={smallScreenTitleStyle}></h1>
+                    <h1 className="d-none d-md-block" style={titleStyle}>{TITLE}</h1>
+                    <h1 className="d-block d-md-none" style={smallScreenTitleStyle}>{TITLE}</h1>
                 </Col>
             </Row>
         </div>

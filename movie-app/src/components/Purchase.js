@@ -4,17 +4,15 @@ import Title from './Title'
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 import './Components.css';
+import {addPurchaseUrl, successMessage, failureMessage, serverUnreachableMessage} from "../consts/consts";
 
 const Purchase = ({ totalPrice }) => {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
-    const addPurchaseUrl = 'http://localhost:8080/purchase/purchases'
+
     const navigate = useNavigate();
     const [displayMessage, setDisplayMessage] = useState('');
-    const successMessage = 'Purchase was successful. Navigating to homepage.'
-    const failureMessage = 'Failed to purchase, please try again later. Error code: '
-    const serverUnreachableMessage = "No response from the server. Please try again later.";
 
     function handleSubmit(event) {
         event.preventDefault();

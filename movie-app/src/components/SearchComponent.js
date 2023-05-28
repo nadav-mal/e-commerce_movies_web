@@ -5,6 +5,7 @@ import axios from 'axios';
 import { Row, Col, Button } from 'react-bootstrap';
 import SearchForm from './SearchForm';
 import SearchResults from './SearchResults';
+import  * as consts from '../consts/consts'
 const SearchComponent = () => {
     const [searchString, setSearchString] = useState('');
     const [genres, setGenres] = useState([]);
@@ -14,31 +15,23 @@ const SearchComponent = () => {
     const [searchHistory, setSearchHistory] = useState([]);
     const [showSearchHistory, setShowSearchHistory] = useState(false);
     const [cartSize, setCartSize] = useState(0);
-
-    const genresUrl = 'https://api.themoviedb.org/3/genre/movie/list';
-    const apiKey = 'b91b712834ebca8f1c0c1e009c6276b6';
-    const urlPrefix = 'https://api.themoviedb.org/3/';
-    const urlSearchPostfix = 'search/movie';
-    const urlDiscoverPostfix = 'discover/movie';
-    const errorMessagePrefix = "Error fetching ";
-    const genresErrorMessagePostfix = 'genres:';
-    const moviesErrorMessagePostfix = 'movies:';
-
     const genresMap= new Map();
-
+//input_value -> onchange -> submit takes the input_value and inserts it into "submit value"
+ //useEffect -> submit value dependencies, useEffect will trigger the submitValue and so on and so forth
     useEffect(() => {
         getGenres();
         getCartSize();
     }, []);
+
     const getGenres = () =>{
-        axios.get(genresUrl, {
-            params: { api_key: apiKey, },
+        axios.get(consts.genresUrl, {
+            params: { api_key: consts.apiKey, },
         })
             .then((response) => {
                 setGenres(response.data.genres);
             })
             .catch((error) => {
-                console.error(errorMessagePrefix + genresErrorMessagePostfix, error);
+                console.error(consts.errorMessagePrefix + consts.genresErrorMessagePostfix, error);
             });
     }
     const handleSearchStringChange = (event) => {
@@ -58,7 +51,7 @@ const SearchComponent = () => {
         setReleaseYear(event.target.value);
     };
     const getCartSize = () =>{
-        const getCartSizeURL = 'http://localhost:8080/cart/size';
+        const getCartSizeURL = consts.serverCartAPI+ '/size';
         axios.get(getCartSizeURL)
             .then(response =>{
                 setCartSize(response.data);
@@ -72,31 +65,25 @@ const SearchComponent = () => {
         fetchMovies();
         addToSearchHistory();
     };
-    const handleSearchAgain = (search) => {
-        setShowSearchHistory(false)
-        setSearchString(search.searchString);
-        setSelectedGenres(search.selectedGenres);
-        setReleaseYear(search.releaseYear);
-        fetchMovies();
-    };
+
 
     const addToSearchHistory = () => {
         const isSearchAlreadyExists = searchHistory.some((entry) => {
             // Compare the searchString, selectedGenres, releaseYear
             return (
                 entry.searchString === searchString &&
-                entry.releaseYear === releaseYear
+                entry.releaseYear === releaseYear &&
+                    entry.selectedGenres === selectedGenres
             );
         });
         if( searchString === '' && releaseYear === '' && (!selectedGenres.length))
             return;
-        if (!isSearchAlreadyExists) {
+        if(!isSearchAlreadyExists) {
             selectedGenres.forEach((genre) => {
                 genresMap.set(genre.name, genre.id);
             });
 
             const genreNames = selectedGenres.map((genre) => `${genre.name}`);
-            console.log(genreNames);
 
             const searchEntry = {
                 searchString: searchString,
@@ -107,33 +94,45 @@ const SearchComponent = () => {
             setSelectedGenres([]);
         }
     };
+    const handleSearchAgain = (search) => {
+        setSearchString(search.searchString);
+        setSelectedGenres(search.selectedGenres);
+        setReleaseYear(search.releaseYear);
+        setShowSearchHistory(false);
+    };
 
     const fetchMovies = async () => {
         try {
-            const requestInfo =  getPathAndConfigure();
-            const response = await axios.get(
-                requestInfo.url, { params: requestInfo.params, }
-            );
+            const requestInfo = getPathAndConfigure();
+            const response = await axios.get(requestInfo.url, { params: requestInfo.params });
             setMovies(response.data.results);
         } catch (error) {
-            console.error(errorMessagePrefix + moviesErrorMessagePostfix, error);
+            console.error(consts.errorMessagePrefix + consts.moviesErrorMessagePostfix, error);
         }
     };
 
+    const handleButtonClick = (search) => {
+        handleSearchAgain(search);
+        //fetchMovies();
+        //UseEffect should trigger fetch movies after we separate the logic between both search / search again
+     };
+
+
     const getPathAndConfigure = () => {
         const params = {
-            api_key: apiKey,
+            api_key: consts.apiKey,
             with_genres: selectedGenres.map((genre) => genre.id).join(','),
             primary_release_year: releaseYear,
             include_adult: false,
         };
+        console.log(searchString);
 
-        let url = urlPrefix;
+        let url = consts.urlPrefix;
         if(searchString !== '') {
             params.query = searchString;
-            url += urlSearchPostfix;
+            url += consts.urlSearchPostfix;
         } else {
-            url += urlDiscoverPostfix;
+            url += consts.urlDiscoverPostfix;
         }
         return {
             url: url,
@@ -157,7 +156,7 @@ const SearchComponent = () => {
             <Title/>
             <Row>
                 <Col className="col-md-12" style={{ backgroundColor: '#f8f9fa', padding: '10px' }}>
-                    <Button href={'/cart'}> {cartSize} Items. Click here to go to cart.</Button>
+                    <Button className="search-button" href={'/cart'}> {cartSize} Items. Click here to go to cart.</Button>
                 </Col>
             </Row>
         <Row>
@@ -175,7 +174,7 @@ const SearchComponent = () => {
             </Col>
             <Col className={'col-md-12'}>
                 <div>
-                    <Button onClick={() => setShowSearchHistory(!showSearchHistory)}>
+                    <Button className="search-button" onClick={() => setShowSearchHistory(!showSearchHistory)}>
                         Show Search History
                     </Button>
                 </div>
@@ -183,18 +182,24 @@ const SearchComponent = () => {
                     <div>
                         <h3>Search History</h3>
                         <hr/>
-                        <Button className={'btn btn-danger'} onClick={clearHistory}>Clear Search History</Button>
+                        {
+                            (searchHistory.length && searchHistory.length >0) ?
+                                <Button className={'btn btn-danger'} onClick={clearHistory}>Clear Search History</Button>
+                                :
+                                <b> Search history is currently empty</b>
+                        }
+
                         {searchHistory.map((search, index) => (
                             <div key={index}>
-                                <b>Search String:  {search.searchString}</b>
+                                <p> <strong>Search String:</strong>  {search.searchString ? search.searchString : 'Empty parameter'}</p>
                                 <br/>
-                                <b>Selected Genres: {search.selectedGenres.join('|')}</b>
+                                <p> <strong>Selected Genres:</strong> {search.selectedGenres ? search.selectedGenres.join('|') : 'Empty parameter'}</p>
                                 <br/>
-                                <b>Release Year: {search.releaseYear}</b>
+                                <p> <strong> Release Year:</strong> {search.releaseYear ? search.releaseYear : 'Empty parameter'}</p>
                                 <Row>
                                     <p>
                                         <Button onClick={() => deleteSearch(index)}>Delete Search</Button>
-                                        <Button onClick={() => handleSearchAgain(search)}>Search Again</Button>
+                                        <Button onClick={() => handleButtonClick(search)}>Search Again</Button>
                                     </p>
                                 </Row>
                                 <hr />

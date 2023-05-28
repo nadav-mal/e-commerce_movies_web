@@ -7,12 +7,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-/**
- * This code is for debugging purposes only.
- * You can check the DB contents by visiting http://localhost:8080/debug/purchases
- * You may add new routes to this controller if you want to test your code.
- * This class will not be graded (ignored by the grader).
- */
 @RestController
 @RequestMapping("/purchase")
 @CrossOrigin(origins = "http://localhost:3000")
@@ -22,16 +16,11 @@ public class PurchaseController {
 
     @GetMapping("/purchases")
     public List<Purchase> showPurchases() {
-        System.out.println("OUT HERE!!");
         return repository.findAll(); // this is a JPA method to get all the purchases
     }
 
     @PostMapping("/purchases")
     public Purchase addPurchase(Purchase purchase){
-        System.out.println("In POST");
         return repository.save(purchase);
     }
-
-    //@PostMapping("/addToCart")
-
 }

@@ -3,13 +3,11 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 import { Container } from 'react-bootstrap';
-import Navbar from './components/Navbar';
-import SearchComponent from './components/SearchComponent';
-import Cart from './components/Cart';
-import HomePage from "./components/HomePage";
+import Navbar from './components/utils/Navbar';
+import SearchComponent from './components/searchPage/SearchComponent';
+import Cart from './components/cartPage/Cart';
+import HomePage from "./components/homePage/HomePage";
 const App = () => {
-
-
     return (
         <Router>
             <div>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
-import Title from './Title';
+import Title from '../utils/Title';
 import axios from 'axios';
 import './HomePage.css';
 

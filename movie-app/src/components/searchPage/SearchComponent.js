@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import Title from './Title'
+import Title from '../utils/Title'
 
 import axios from 'axios';
 import { Row, Col, Button } from 'react-bootstrap';
 import SearchForm from './SearchForm';
 import SearchResults from './SearchResults';
-import  * as consts from '../consts/consts'
+import  * as consts from '../../consts/consts'
+import SearchList from "./SearchList";
+import CartNavigator from './CartNavigator'
 const SearchComponent = () => {
     const [searchString, setSearchString] = useState('');
     const [genres, setGenres] = useState([]);
@@ -15,13 +17,18 @@ const SearchComponent = () => {
     const [searchHistory, setSearchHistory] = useState([]);
     const [showSearchHistory, setShowSearchHistory] = useState(false);
     const [cartSize, setCartSize] = useState(0);
+    const [submitValue,setSubmitValue] = useState('');
     const genresMap= new Map();
-//input_value -> onchange -> submit takes the input_value and inserts it into "submit value"
- //useEffect -> submit value dependencies, useEffect will trigger the submitValue and so on and so forth
+
+
     useEffect(() => {
         getGenres();
         getCartSize();
     }, []);
+
+    useEffect(() => {
+        fetchMovies();
+    },[submitValue])
 
     const getGenres = () =>{
         axios.get(consts.genresUrl, {
@@ -61,11 +68,17 @@ const SearchComponent = () => {
 
     const handleSearch = (event) => {
         event.preventDefault();
+        setSubmitValue(searchString);
         setShowSearchHistory(false)
-        fetchMovies();
         addToSearchHistory();
     };
 
+    const handleSearchAgain = (search) => {
+        setSubmitValue(search.searchString);
+        setSelectedGenres(search.selectedGenres);
+        setReleaseYear(search.releaseYear);
+        setShowSearchHistory(false);
+    };
 
     const addToSearchHistory = () => {
         const isSearchAlreadyExists = searchHistory.some((entry) => {
@@ -77,7 +90,7 @@ const SearchComponent = () => {
             );
         });
         if( searchString === '' && releaseYear === '' && (!selectedGenres.length))
-            return;
+            return;//Not saving an empty search (it's stupid)
         if(!isSearchAlreadyExists) {
             selectedGenres.forEach((genre) => {
                 genresMap.set(genre.name, genre.id);
@@ -94,12 +107,7 @@ const SearchComponent = () => {
             setSelectedGenres([]);
         }
     };
-    const handleSearchAgain = (search) => {
-        setSearchString(search.searchString);
-        setSelectedGenres(search.selectedGenres);
-        setReleaseYear(search.releaseYear);
-        setShowSearchHistory(false);
-    };
+
 
     const fetchMovies = async () => {
         try {
@@ -111,13 +119,6 @@ const SearchComponent = () => {
         }
     };
 
-    const handleButtonClick = (search) => {
-        handleSearchAgain(search);
-        //fetchMovies();
-        //UseEffect should trigger fetch movies after we separate the logic between both search / search again
-     };
-
-
     const getPathAndConfigure = () => {
         const params = {
             api_key: consts.apiKey,
@@ -125,11 +126,9 @@ const SearchComponent = () => {
             primary_release_year: releaseYear,
             include_adult: false,
         };
-        console.log(searchString);
-
         let url = consts.urlPrefix;
-        if(searchString !== '') {
-            params.query = searchString;
+        if(submitValue !== '') {
+            params.query = submitValue;
             url += consts.urlSearchPostfix;
         } else {
             url += consts.urlDiscoverPostfix;
@@ -140,25 +139,10 @@ const SearchComponent = () => {
         }
     }
 
-    const clearHistory = () =>{
-        setSearchHistory([]);
-    }
-    const deleteSearch = (index) => {
-        setSearchHistory((prevHistory) => {
-            const updatedHistory = [...prevHistory];
-            updatedHistory.splice(index, 1);
-            return updatedHistory;
-        });
-    };
-
     return (
         <>
             <Title/>
-            <Row>
-                <Col className="col-md-12" style={{ backgroundColor: '#f8f9fa', padding: '10px' }}>
-                    <Button className="search-button" href={'/cart'}> {cartSize} Items. Click here to go to cart.</Button>
-                </Col>
-            </Row>
+            <CartNavigator cartSize={cartSize}/>
         <Row>
             <Col className={'col-md-12'}>
                 <SearchForm
@@ -179,33 +163,9 @@ const SearchComponent = () => {
                     </Button>
                 </div>
                 { showSearchHistory && (
-                    <div>
-                        <h3>Search History</h3>
-                        <hr/>
-                        {
-                            (searchHistory.length && searchHistory.length >0) ?
-                                <Button className={'btn btn-danger'} onClick={clearHistory}>Clear Search History</Button>
-                                :
-                                <b> Search history is currently empty</b>
-                        }
-
-                        {searchHistory.map((search, index) => (
-                            <div key={index}>
-                                <p> <strong>Search String:</strong>  {search.searchString ? search.searchString : 'Empty parameter'}</p>
-                                <br/>
-                                <p> <strong>Selected Genres:</strong> {search.selectedGenres ? search.selectedGenres.join('|') : 'Empty parameter'}</p>
-                                <br/>
-                                <p> <strong> Release Year:</strong> {search.releaseYear ? search.releaseYear : 'Empty parameter'}</p>
-                                <Row>
-                                    <p>
-                                        <Button onClick={() => deleteSearch(index)}>Delete Search</Button>
-                                        <Button onClick={() => handleButtonClick(search)}>Search Again</Button>
-                                    </p>
-                                </Row>
-                                <hr />
-                            </div>
-                        ))}
-                    </div>
+                    <SearchList searchHistory={searchHistory}
+                                  setSearchHistory={setShowSearchHistory}
+                                  handleSearchAgain={handleSearchAgain}/>
                 )}
                 {
                    !showSearchHistory && <SearchResults movies={movies} setCartSize={setCartSize}/>

@@ -1,0 +1,16 @@
+.empty-cart-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.empty-cart-message {
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+
+.empty-cart-col {
+    display: flex;
+    justify-content: center;
+}

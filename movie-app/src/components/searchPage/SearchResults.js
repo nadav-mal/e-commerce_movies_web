@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Row, Col, Modal, Button } from 'react-bootstrap';
 import axios from 'axios'
-import './Components.css';
-import {baseImageUrl, serverCartAPI, addToCart, addErrMsg} from "../consts/consts";
+import '../utils/Components.css';
+import {baseImageUrl, serverCartAPI, addToCart, addErrMsg} from "../../consts/consts";
 const SearchResults = ({ movies,setCartSize }) => {
     const [selectedMovie, setSelectedMovie] = useState(null);
     const [showModal, setShowModal] = useState(false);

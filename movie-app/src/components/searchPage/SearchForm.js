@@ -1,7 +1,10 @@
 // SearchForm.js
 import React from 'react';
 import { Row, Col } from 'react-bootstrap';
-import './Components.css'
+import '../utils/Components.css'
+
+import {genreSelectText} from "../../consts/consts";
+import FormInputRow from "./FormInputRow";
 const SearchForm = ({
                         searchString,
                         handleSearchStringChange,
@@ -14,25 +17,13 @@ const SearchForm = ({
                     }) => {
     return (
             <form onSubmit={handleSearch}>
+                <FormInputRow labelForText="searchString"
+                              labelTxt="Search:"
+                              onChangeHandler={handleSearchStringChange}
+                              valueState={searchString}/>
                 <Row>
                     <Col>
-                        <label htmlFor="searchString" className="form-label">
-                            Search:
-                        </label>
-                        <input
-                            type="text"
-                            id="searchString"
-                            value={searchString}
-                            onChange={handleSearchStringChange}
-                            className="form-control"
-                        />
-                    </Col>
-                </Row>
-                <Row>
-                    <Col>
-                        <label htmlFor="genres" className="form-label">
-                            Genres, Hold CTRL(windows) or Command(Mac) button to select multiple genres
-                        </label>
+                        <label htmlFor="genres" className="form-label">{genreSelectText}</label>
                         <select
                             id="genres"
                             multiple
@@ -48,20 +39,10 @@ const SearchForm = ({
                         </select>
                     </Col>
                 </Row>
-                <Row>
-                    <Col>
-                        <label htmlFor="releaseYear" className="form-label">
-                            Release Year:
-                        </label>
-                        <input
-                            type="text"
-                            id="releaseYear"
-                            value={releaseYear}
-                            onChange={handleReleaseYearChange}
-                            className="form-control"
-                        />
-                    </Col>
-                </Row>
+                <FormInputRow labelForText="releaseYear"
+                              labelTxt="Release Year:"
+                              onChangeHandler={handleReleaseYearChange}
+                              valueState={releaseYear}/>
                 <Row>
                     <Col className={'col-3'}>
                         <button type="submit" className="search-button">

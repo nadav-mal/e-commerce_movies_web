@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { Row, Col, Button } from 'react-bootstrap';
-import Title from './Title'
+import Title from '../utils/Title'
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
-import './Components.css';
-import {addPurchaseUrl, successMessage, failureMessage, serverUnreachableMessage} from "../consts/consts";
+import '../utils/Components.css';
+import {addPurchaseUrl, successMessage, failureMessage, serverUnreachableMessage} from "../../consts/consts";
 
-const Purchase = ({ totalPrice }) => {
+const Purchase = ({ totalPrice, emptyCart }) => {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
@@ -29,6 +29,7 @@ const Purchase = ({ totalPrice }) => {
         })
             .then(() => {
                 displayMessageToUser(successMessage, true);
+                emptyCart(); //Only if user managed to complete a purchase.
             })
             .catch(error => {
                 if (error.response) {
@@ -47,14 +48,28 @@ const Purchase = ({ totalPrice }) => {
         });
     }
 
+    /**
+     * @param message - A message to display
+     * @param paymentSuccess A boolean to state if it was a good message (or a bad one)
+     * A countdown is displayed as a part of the message just because in case of being redirected
+     * the user should know that he is waiting on purpose and not because of an unknown delay
+     */
     const displayMessageToUser = (message, paymentSuccess) => {
-        setDisplayMessage(message);
-        setTimeout(() => {
-            setDisplayMessage('');
-            if (paymentSuccess)
-                navigate('/');
-        }, 5000);
+        let countdown = 5;
+        setDisplayMessage(`${message} ${countdown}`);
+
+        const timer = setInterval(() => {
+            countdown--;
+            setDisplayMessage(`${message} ${countdown}`);
+            if (countdown === 0) {
+                clearInterval(timer);
+                setDisplayMessage('');
+                if (paymentSuccess)
+                    navigate('/');
+            }
+        }, 1000);
     }
+
 
     const resetForm = () => {
         setFirstName('');
@@ -63,14 +78,15 @@ const Purchase = ({ totalPrice }) => {
     }
 
     return (
-        <div>
+        <div className="purchase-container">
             <Title />
             <h2>Purchase</h2>
-            <p>Total Price: ${totalPrice}</p>
+            <p><strong>Total Price:</strong> ${totalPrice}</p>
 
             <Row>
                 <Col md={6}>
-                    <form onSubmit={handleSubmit}>
+                    <form className="purchase-form" onSubmit={handleSubmit}>
+                        {/* Form inputs */}
                         <div className="mb-3">
                             <label htmlFor="firstName" className="form-label">First Name:</label>
                             <input
@@ -110,9 +126,8 @@ const Purchase = ({ totalPrice }) => {
                     </form>
                 </Col>
             </Row>
-
             {displayMessage && (
-                <Button className={'btn btn-success'}>
+                <Button className="btn btn-success">
                     <div className="message">{displayMessage}</div>
                 </Button>
             )}

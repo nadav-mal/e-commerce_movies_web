@@ -1,7 +1,7 @@
 import React from "react";
 import {Button, Row} from "react-bootstrap";
 
-const MovieContent = ({searchHistory,setSearchHistory,handleSearchAgain}) =>{
+const SearchList = ({searchHistory,setSearchHistory,handleSearchAgain}) =>{
 
     const clearHistory = () =>{
         setSearchHistory([]);
@@ -14,7 +14,6 @@ const MovieContent = ({searchHistory,setSearchHistory,handleSearchAgain}) =>{
         });
     };
     const doSearch = (search) =>{
-        handleSearchAgain(search)
         handleSearchAgain(search)
     }
 
@@ -46,4 +45,4 @@ const MovieContent = ({searchHistory,setSearchHistory,handleSearchAgain}) =>{
         ))}
     </div>)
 };
-export default MovieContent;
+export default SearchList;

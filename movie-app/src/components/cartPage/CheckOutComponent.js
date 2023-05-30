@@ -1,17 +1,20 @@
 import {Col, Row,Button} from "react-bootstrap";
 import React from "react";
 
-const CheckOutComponent = ({totalPrice, setShowPurchases}) =>{
+const CheckOutComponent = ({state, dispatch}) =>{
 
+    const handleCheckoutClick = ()=>{
+        dispatch({type:"CHECKOUT",payload:{}});
+    }
 
     return(
         <>
             <Row>
                 <Col className="col-sm-4 col-md-2">
-                    <p className="total-price">Total Price: {totalPrice}$</p>
+                    <p className="total-price">Total Price: {state.totalPrice}$</p>
                 </Col>
                 <Col className="col-sm-4 col-md-2">
-                    <Button className={'btn btn-primary'} onClick={()=> setShowPurchases(true)}>
+                    <Button className={'btn btn-primary'} onClick={handleCheckoutClick}>
                         Checkout
                     </Button>
                 </Col>

@@ -29,7 +29,7 @@ const SearchList = ({state,dispatch}) =>{
             <div key={index}>
                 <p> <strong>Search String:</strong>  {search.searchString ? search.searchString : 'Empty parameter'}</p>
                 <br/>
-                <p> <strong>Selected Genres:</strong> {search.selectedGenres ? search.selectedGenres.join('|') : 'Empty parameter'}</p>
+                <p> <strong>Selected Genres:</strong> {search.selectedGenre ? search.selectedGenre : 'Empty parameter'}</p>
                 <br/>
                 <p> <strong> Release Year:</strong> {search.releaseYear ? search.releaseYear : 'Empty parameter'}</p>
                 <Row>

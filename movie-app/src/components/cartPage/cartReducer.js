@@ -1,73 +1,94 @@
 import * as consts from "../../consts/consts";
 import axios from "axios";
-import {ACTION_TYPES} from "./ACTION_TYPES";
+import { ACTION_TYPES } from "./ACTION_TYPES";
 
+/**
+ * The initial state of the cart.
+ */
 export const INITIAL_STATE = {
- cartData: null,
- cartSize:0,
- showModal: false,
- selectedImage:'',
- showPurchases:false,
-    totalPrice:0,
-}
+    cartData: null,
+    cartSize: 0,
+    showModal: false,
+    selectedImage: "",
+    showPurchases: false,
+    totalPrice: 0,
+};
 
-const cartReducer = (state,action)=>{
-    switch (action.type){
+/**
+ * Reducer function for the cart state.
+ *
+ * @param {object} state - The current state of the cart.
+ * @param {object} action - The action object that specifies the type and payload.
+ * @returns {object} - The updated state of the cart.
+ */
+const cartReducer = (state, action) => {
+    switch (action.type) {
         case ACTION_TYPES.UPDATE_CART:
-            return{
+            return {
                 ...state,
                 cartData: action.payload.cart,
                 cartSize: action.payload.cartSize,
                 totalPrice: getTotalPrice(action.payload.cart),
-            }
+            };
         case ACTION_TYPES.EMPTY_CART:
             const res = emptyCart();
-            if(!res) {
-                return{
-                    ...state
-                }
+            if (!res) {
+                return {
+                    ...state,
+                };
             }
-             return{
+            return {
                 ...state,
                 cartData: null,
-                cartSize:0
-            }
+                cartSize: 0,
+            };
         case ACTION_TYPES.HANDLE_IMAGE_CLICK:
-            return{
+            return {
                 ...state,
                 selectedImage: action.payload.selectedImage,
                 showModal: true,
-            }
+            };
         case ACTION_TYPES.CLOSE_MODAL:
-        {
-            return{
+            return {
                 ...state,
                 showModal: false,
-            }
-        }
+            };
         case ACTION_TYPES.CHECKOUT:
-            return{
+            return {
                 ...state,
                 showPurchases: true,
-            }
+            };
+        default:
+            return state;
     }
-}
-export default cartReducer;
-
-const emptyCart =  () => {
-    const emptyCartURL = consts.serverCartAPI + '/clear'
-    const res =  axios.post(emptyCartURL)
-        .then((res)=>{
-            if(!res.ok)
-                throw new Error();
-            return true;
-        }).catch(()=>{
-        return false;
-        });
-    return res;
 };
 
+export default cartReducer;
 
+/**
+ * Clears the cart by making a request to the server.
+ *
+ * @returns {Promise<boolean>} - A promise that resolves to true if the cart is successfully cleared, false otherwise.
+ */
+const emptyCart = () => {
+    const emptyCartURL = consts.serverCartAPI + '/clear';
+    return axios.post(emptyCartURL)
+        .then((res) => {
+            if (!res.ok)
+                throw new Error();
+            return true;
+        })
+        .catch(() => {
+            return false;
+        });
+};
+
+/**
+ * Calculates the total price of the items in the cart.
+ *
+ * @param {array} cartData - The array of cart items.
+ * @returns {string} - The total price of the items formatted as a string with two decimal places.
+ */
 const getTotalPrice = (cartData) => {
     if (cartData) {
         const totalPrice = cartData.reduce((total) => total + 3.99, 0);

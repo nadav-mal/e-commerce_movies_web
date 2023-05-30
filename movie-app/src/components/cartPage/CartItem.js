@@ -1,8 +1,17 @@
 import React from 'react';
-import {Row, Col, Image} from 'react-bootstrap';
+import { Row, Col, Image } from 'react-bootstrap';
 import * as consts from "../../consts/consts";
 
-const CartItem = ({movie,index,handleImageClick,handleRemoveFromCart}) => {
+/**
+ * Renders a single item in the cart.
+ * @param {object} props - The component props.
+ * @param {object} props.movie - The movie object representing the item in the cart.
+ * @param {number} props.index - The index of the item in the cart.
+ * @param {function} props.handleImageClick - The function to handle the click event on the movie image.
+ * @param {function} props.handleRemoveFromCart - The function to handle the removal of the movie from the cart.
+ * @returns {JSX.Element} - The JSX element representing the cart item.
+ */
+const CartItem = ({ movie, index, handleImageClick, handleRemoveFromCart }) => {
     return (
         <div key={index} className="cart-item">
             <Row>
@@ -26,12 +35,13 @@ const CartItem = ({movie,index,handleImageClick,handleRemoveFromCart}) => {
                     <p>{movie.overview}</p>
                 </Col>
                 <Col className={'col-sm-3 col-md-2'}>
-                    <button className={'btn btn-danger'} onClick={()=> handleRemoveFromCart(movie.movieId)}>
+                    <button className={'btn btn-danger'} onClick={() => handleRemoveFromCart(movie.movieId)}>
                         Remove from cart
                     </button>
                 </Col>
             </Row>
         </div>
-    )
+    );
 };
+
 export default CartItem;

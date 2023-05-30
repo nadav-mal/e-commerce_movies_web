@@ -1,13 +1,24 @@
-import {Col, Row,Button} from "react-bootstrap";
+import { Col, Row, Button } from "react-bootstrap";
 import React from "react";
 
-const CheckOutComponent = ({state, dispatch}) =>{
+/**
+ * Component for displaying the checkout section in the cart.
+ *
+ * @param {object} state - The current state of the cart.
+ * @param {function} dispatch - The dispatch function for updating the cart state.
+ * @returns {JSX.Element} - The JSX element representing the checkout component.
+ */
+const CheckOutComponent = ({ state, dispatch }) => {
 
-    const handleCheckoutClick = ()=>{
-        dispatch({type:"CHECKOUT",payload:{}});
-    }
+    /**
+     * Event handler for the checkout button click.
+     * Triggers the checkout action.
+     */
+    const handleCheckoutClick = () => {
+        dispatch({ type: "CHECKOUT", payload: {} });
+    };
 
-    return(
+    return (
         <>
             <Row>
                 <Col className="col-sm-4 col-md-2">
@@ -18,12 +29,13 @@ const CheckOutComponent = ({state, dispatch}) =>{
                         Checkout
                     </Button>
                 </Col>
-                <Col className={'col-sm-4 col-md-4'} >
+                <Col className={'col-sm-4 col-md-4'}>
                     <Button className={'btn btn-secondary'} href={'/search'}>Back to search</Button>
                 </Col>
             </Row>
-            <hr/>
+            <hr />
         </>
-    )
-}
+    );
+};
+
 export default CheckOutComponent;

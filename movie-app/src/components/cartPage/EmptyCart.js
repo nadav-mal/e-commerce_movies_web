@@ -3,6 +3,9 @@ import { Row, Col, Button } from 'react-bootstrap';
 import Title from '../utils/Title';
 import './EmptyCart.css'; // Import the CSS file for styling
 
+/**
+ The EmptyCart component displays a message when the cart is empty.
+ */
 const EmptyCart = () => {
     return (
         <>

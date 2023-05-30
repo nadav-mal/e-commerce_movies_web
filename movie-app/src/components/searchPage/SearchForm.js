@@ -6,32 +6,34 @@ import '../utils/Components.css'
 import {genreSelectText} from "../../consts/consts";
 import FormInputRow from "./FormInputRow";
 const SearchForm = ({
-                        searchString,
-                        handleSearchStringChange,
-                        selectedGenres,
-                        handleGenreChange,
-                        genres,
-                        releaseYear,
-                        handleReleaseYearChange,
+                        state,
+                        handleChange,
                         handleSearch,
+                        addGenre
                     }) => {
+    const getSelectedGenresValue = () =>{
+
+        return state.selectedGenres ? state.selectedGenres.map((genre) => genre.id) : '';
+    }
+
+
     return (
             <form onSubmit={handleSearch}>
                 <FormInputRow labelForText="searchString"
                               labelTxt="Search:"
-                              onChangeHandler={handleSearchStringChange}
-                              valueState={searchString}/>
+                              onChangeHandler={handleChange}
+                              valueState={state.searchString}/>
                 <Row>
                     <Col>
                         <label htmlFor="genres" className="form-label">{genreSelectText}</label>
-                        <select
+                        <select name="genres"
                             id="genres"
                             multiple
-                            onChange={handleGenreChange}
-                            value={selectedGenres.map((genre) => genre.id)}
+                            value={state.selectedGenres.map((genre) => genre.id)}
+                            onChange={addGenre}
                             className="form-select"
                         >
-                            {genres.map((genre) => (
+                            {state.genres.map((genre) => (
                                 <option key={genre.id} value={genre.id}>
                                     {genre.name}
                                 </option>
@@ -41,8 +43,8 @@ const SearchForm = ({
                 </Row>
                 <FormInputRow labelForText="releaseYear"
                               labelTxt="Release Year:"
-                              onChangeHandler={handleReleaseYearChange}
-                              valueState={releaseYear}/>
+                              onChangeHandler={handleChange}
+                              valueState={state.releaseYear}/>
                 <Row>
                     <Col className={'col-3'}>
                         <button type="submit" className="search-button">

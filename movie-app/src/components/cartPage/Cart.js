@@ -81,7 +81,7 @@ const Cart = () => {
                                    setShowPurchases={setShowPurchases}/>
                 <Button className={'btn btn-danger'} onClick={emptyCart}>Clear cart</Button>
                 {cartData.map((movie, index) => (
-                   <CartItem movie={movie}
+                   <CartItem key={index} movie={movie}
                              index={index}
                              handleImageClick={handleImageClick}
                              handleRemoveFromCart={handleRemoveFromCart}

@@ -3,7 +3,7 @@ import { Row, Col, Modal, Button } from 'react-bootstrap';
 import axios from 'axios'
 import '../utils/Components.css';
 import {baseImageUrl, serverCartAPI, addToCart, addErrMsg} from "../../consts/consts";
-const SearchResults = ({ movies,setCartSize }) => {
+const SearchResults = ({ movies,dispatch }) => {
     const [selectedMovie, setSelectedMovie] = useState(null);
     const [showModal, setShowModal] = useState(false);
 
@@ -21,7 +21,7 @@ const SearchResults = ({ movies,setCartSize }) => {
             }
         })
             .then(response => {
-                setCartSize(response.data);
+                dispatch({type:"CHANGE_INPUT", payload:{name: "cartSize", value: response.data}});
             })
             .catch(()=>{
                 alert(addErrMsg)
@@ -102,5 +102,4 @@ const SearchResults = ({ movies,setCartSize }) => {
 
     );
 };
-
 export default SearchResults;

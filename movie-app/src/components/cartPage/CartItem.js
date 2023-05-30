@@ -3,7 +3,7 @@ import {Row, Col, Image} from 'react-bootstrap';
 import * as consts from "../../consts/consts";
 
 const CartItem = ({movie,index,handleImageClick,handleRemoveFromCart}) => {
-    return (<>
+    return (
         <div key={index} className="cart-item">
             <Row>
                 <Col className={'col-sm-12 col-md-3 d-none d-sm-block'}>
@@ -32,6 +32,6 @@ const CartItem = ({movie,index,handleImageClick,handleRemoveFromCart}) => {
                 </Col>
             </Row>
         </div>
-    </>)
+    )
 };
 export default CartItem;

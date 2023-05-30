@@ -6,7 +6,7 @@ const FormInputRow = ({labelForText,labelTxt, onChangeHandler, valueState}) =>{
     <Row>
         <Col>
             <label htmlFor={labelForText} className={'form-label'}>{labelTxt}</label>
-            <input
+            <input name={labelForText}
                 type="text"
                 id={labelForText}
                 value={valueState}

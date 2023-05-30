@@ -1,11 +1,15 @@
 import { Row, Col } from 'react-bootstrap';
+import { websiteTitle } from '../../consts/consts';
+
 /**
- React component that displays the title of the Bulls and Cows game on a background image.
- @returns {JSX.Element} - React component that displays the title of the Bulls and Cows game on a background image.
+ * Represents the title component.
+ * Displays a title with a background image.
  */
-import {websiteTitle} from '../../consts/consts';
 function Title() {
 
+    /**
+     * The inline style object for the title container.
+     */
     const divStyle = {
         backgroundImage: 'url(titleImg.jpg)',
         backgroundRepeat: 'no-repeat',
@@ -16,19 +20,31 @@ function Title() {
         padding: '20px',
         textAlign: 'center'
     };
+
+    /**
+     * The inline style object for the title text.
+     */
     const titleStyle = {
         marginTop: '40px',
         fontSize: '3rem', // Add this line to increase the font size
         fontFamily: 'cursive', // Add this line to set a fancy font
         textShadow: '2px 2px 5px black', // Add this line to add a text shadow
-    }
+    };
 
+    /**
+     * The inline style object for the title text on small screens.
+     */
     const smallScreenTitleStyle = {
         ...titleStyle,
         fontSize: '2rem',
-    }
+    };
 
     return (
+        /**
+         * Renders the title component.
+         *
+         * @returns {JSX.Element} The JSX element representing the title component.
+         */
         <div style={divStyle}>
             <Row>
                 <Col>

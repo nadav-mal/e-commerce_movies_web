@@ -1,21 +1,30 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
+import {apiKey} from '../../consts/consts';
 import Title from '../utils/Title';
 import axios from 'axios';
 import './HomePage.css';
 
+
+/**
+ * A component representing the home page of the movie store.
+ * It displays the welcome message and the top rated movies.
+ * @returns {JSX.Element} The rendered HomePage.
+ */
 const HomePage = () => {
     const [topRated, setTopRated] = useState([]);
-    const API_KEY = 'b91b712834ebca8f1c0c1e009c6276b6';
 
     useEffect(() => {
         fetchTopRatedMovies();
     }, []);
 
+    /**
+     * Fetches the top rated movies from the API and updates the state with the retrieved data.
+     */
     const fetchTopRatedMovies = async () => {
         try {
             const response = await axios.get(
-                `https://api.themoviedb.org/3/movie/top_rated?api_key=${API_KEY}`
+                `https://api.themoviedb.org/3/movie/top_rated?api_key=${apiKey}`
             );
             setTopRated(response.data.results);
         } catch (error) {
@@ -24,6 +33,10 @@ const HomePage = () => {
         }
     };
 
+    /**
+     * Renders the movies in rows with three movies per row.
+     * @returns {Array<JSX.Element>} An array of rows containing the rendered movies.
+     */
     const renderMovies = () => {
         const rows = [];
         for (let i = 0; i < topRated.length; i += 3) {

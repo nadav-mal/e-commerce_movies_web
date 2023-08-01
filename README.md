@@ -1,32 +1,8 @@
 # Authors Nadav Malul, Ely Asaf
 
 # Explanations
-GameRanker - A Game Ranking Website built with Spring, Spring Security, and Thymeleaf
-
-Introduction:
-GameRanker is a dynamic web application designed to provide users with a platform to discover, rate, and discuss their favorite video games. It leverages the power of Spring framework, Spring Security, and Thymeleaf templating engine to deliver a secure, responsive, and user-friendly experience for gamers worldwide.
-
-Key Features:
-
-User Registration and Authentication:
-GameRanker implements Spring Security to manage user registration and authentication. Users can create accounts, login securely, and retrieve lost passwords. Authentication ensures that only registered users can access certain features, such as submitting game reviews, rating games, and participating in discussions.
-
-Game Listings and Details:
-The website allows users to explore a vast collection of games. These game listings display essential information, including title, release date, genre and more.
-
-
-Game Reviews and Ratings:
-Registered users can contribute to the community by submitting game reviews and games to review.
-They can share their experiences, highlight pros and cons, and rate games on a scale.
-
-
-Admin Dashboard:
-The system includes an admin dashboard with special privileges to manage user accounts, game listings, and reported content.
-Administrators can monitor user activity and handle user-generated content to maintain a healthy and safe environment for all users.
-
-Responsive Design:
-Thymeleaf's dynamic templating allows GameRanker to be responsive, providing an optimal viewing experience on various devices, such as desktops, tablets, and mobile phones. Users can access the website seamlessly from any device, enhancing accessibility.
-
+a movie store powered by React and TMDB's data. Browse through an extensive movie collection  and find your favorite films easily.<br>
+Enjoy a seamless experience on any device and discover the magic of cinema at your fingertips!
 
 ---------------------
 
